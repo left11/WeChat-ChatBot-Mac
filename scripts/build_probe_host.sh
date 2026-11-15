@@ -9,7 +9,9 @@ DEVKIT="${CACHE}/frida-core-devkit-17.8.0-macos-arm64"
   echo 'Build bridge first to fetch and verify the pinned Frida devkit.' >&2; exit 1;
 }
 mkdir -p "${ROOT}/.probe-local/bin"
+VALIDATOR_LITERAL="$(/usr/bin/python3 -c 'import json, sys; print(json.dumps(sys.argv[1]))' "${ROOT}/tools/probe_target.py")"
 xcrun clang -O1 -Wall -Wextra -Werror "${ROOT}/tools/probe_frida_host.c" \
+  "-DPROBE_VALIDATOR_PATH=${VALIDATOR_LITERAL}" \
   -o "${ROOT}/.probe-local/bin/probe-frida-host" -I"${DEVKIT}" -L"${DEVKIT}" \
   -lfrida-core -lbsm -ldl -lm -lresolv -framework Foundation -framework AppKit \
   -framework IOKit -framework Security -lpthread

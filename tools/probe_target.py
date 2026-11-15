@@ -200,6 +200,8 @@ class VerifiedTarget:
     arm64_sha256: str
     supervisor_pid: int
     debugger_pid: int
+    supervisor_identity: dict
+    debugger_identity: dict
     controller_verified: bool = True
 
     def as_dict(self):
@@ -285,9 +287,12 @@ def _preflight(profile_path, *, kernel, now):
             "controller_parent_mismatch")
     for path in (profile_file, executable, module, info_path, state_path, result_path):
         canonical_path(str(path))
+    identity_fields = ("pid", "uid", "start_seconds", "start_microseconds", "executable_path")
     return VerifiedTarget(expected["pid"], expected["uid"], expected["start_seconds"],
                           expected["start_microseconds"], str(app), str(executable), str(module),
-                          ARM64_UUID, ARM64_SHA256, supervisor["pid"], debugger["pid"])
+                          ARM64_UUID, ARM64_SHA256, supervisor["pid"], debugger["pid"],
+                          {key: supervisor[key] for key in identity_fields},
+                          {key: debugger[key] for key in identity_fields})
 
 
 def with_verified_target(profile_path, operation, *, kernel=None, now=None):

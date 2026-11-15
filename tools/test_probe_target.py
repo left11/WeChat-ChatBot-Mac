@@ -114,7 +114,25 @@ class ProbeTargetTests(unittest.TestCase):
         self.assertEqual(target.pid, 101)
         self.assertTrue(target.controller_verified)
         self.assertEqual(target.arm64_sha256, hashlib.sha256(self.slice).hexdigest())
+        self.assertEqual(target.supervisor_identity, self.profile["controller"]["supervisor"])
+        self.assertEqual(target.debugger_identity, self.profile["controller"]["debugger"])
+        self.assertEqual(target.as_dict()["supervisor_identity"], target.supervisor_identity)
         self.assertEqual(self.kernel.reads, [101, 102, 103, 101, 102, 103])
+
+    def test_owner_rebirth_with_updated_profile_changes_verified_generation(self):
+        original = probe.preflight(str(self.profile_path), kernel=self.kernel, now=1000.0)
+        for kind, pid in (("supervisor", 102), ("debugger", 103)):
+            with self.subTest(kind=kind):
+                self.profile["controller"][kind]["start_microseconds"] += 1
+                self.kernel.identities[pid]["start_microseconds"] += 1
+                self.save()
+                changed = probe.preflight(str(self.profile_path), kernel=self.kernel, now=1000.0)
+                self.assertEqual(changed.pid, original.pid)
+                self.assertEqual(changed.supervisor_pid, original.supervisor_pid)
+                self.assertEqual(changed.debugger_pid, original.debugger_pid)
+                self.assertNotEqual(changed, original)
+                self.profile["controller"][kind]["start_microseconds"] -= 1
+                self.kernel.identities[pid]["start_microseconds"] -= 1
 
     def test_no_profile_has_no_discovery_or_action(self):
         with self.assertRaisesRegex(probe.PreflightError, "explicit_profile_required"):
