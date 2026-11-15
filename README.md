@@ -1,6 +1,23 @@
 # 微信 AI 聊天机器人（WeChat AI）
 
-> **本 fork 的当前工作**：适配独立测试 Probe `4.1.15.35 / 270115`。当前为静态适配与隔离校验阶段，尚未验证该版本的聊天读取或自动回复。请先看 [工程约定](docs/engineering.md) 和 [270115 适配证据](docs/probe-270115.md)。下面保留上游产品介绍，不代表此实验版本已经通过。
+## 本 fork：微信工作桥（本地预览）
+
+把需要跟进的聊天放进一个本地工作台：保留原文和引用，整理摘要与待办，准备回复草稿，再把选定的上下文交给 WorkBuddy。当前入口是独立的 Mac 桌面伴侣，启动时不连接或修改微信。
+
+- **已验证**：Mac 界面中的手动导入、便笺、待办、草稿及本地待发送审批；WorkBuddy 5.5.6 / Hy4 已通过真实 MCP 读取合成会话，写回摘要、3 项待办及未审批草稿。标准库服务的 19 项测试通过。
+- **Probe 实验**：独立测试版本 `4.1.15.35 / 270115` 的 metadata 与 180 秒只读观察器连接/清理已通过，但消息样本仍为 **0 条**。另一次单条原生测试获得服务端接受，尚未证实送达；私有实验 helper 不属于发布功能。
+- **仍待验证**：微信消息读取、实际送达和稳定自动回复。`ready` 只表示本地待发送，伴侣当前没有发送适配器，也不会显示虚假的已发送结果。
+
+在已安装完整 Xcode 和 Python 3 的 Apple Silicon Mac 上构建：
+
+```sh
+bash scripts/build_companion.sh
+open "dist/WeChat Work Bridge.app"
+```
+
+先看 [预览版试用说明](docs/morning-preview.md) 和 [桌面伴侣使用说明](docs/companion.md)。[产品方向](docs/product.md) 记录首个场景与推广草案，[竞品记录](docs/competitors.md) 保留公开来源；[工程约定](docs/engineering.md) 和 [实验性地址记录](docs/probe-270115.md) 区分已验证能力与待完成工作。本地 Mac 负责桌面运行与明确授权的 Probe 验证，Cloud 用于离线开发、测试和审查；不是微信常驻运行环境。
+
+> **以下保留上游产品介绍、兼容性和安装流程。** 它们不代表本 fork 的测试结论，也不是当前独立 Probe 的操作入口。本 fork 保留上游 GPL-3.0 许可及署名。
 
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%2026%2B-lightgrey.svg)](#简体中文)

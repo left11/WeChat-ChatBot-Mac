@@ -29,13 +29,19 @@ jobs:
 
       - name: Python syntax
         run: |
-          python3 -m py_compile scripts/check_docs.py devtools/*.py devtools/cosyvoice/*.py tools/*.py
+          python3 -m py_compile scripts/check_docs.py devtools/*.py devtools/cosyvoice/*.py tools/*.py companion/*.py
+
+      - name: Companion JavaScript syntax (no dependencies)
+        run: node --check companion/web/app.js
 
       - name: Docs links, script copy and version JSON
         run: bash scripts/check.sh --docs
 
       - name: Probe contracts (offline, standard library only)
         run: python3 -m unittest discover -s tools -p 'test_probe_*.py' -v
+
+      - name: Companion contracts (synthetic local services, standard library only)
+        run: python3 -m unittest discover -s companion -p 'test_service.py' -v
 
       - name: No private Probe state tracked
         run: |
