@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>微信工作桥</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">桥</div><div><strong>微信工作桥</strong><span>把消息接到工作里</span></div></div>
+      <button class="button primary wide" id="import-button"><span aria-hidden="true">＋</span> 导入聊天</button>
+      <div class="section-label">会话收件箱 <span id="conversation-count">0</span></div>
+      <nav id="conversations" aria-label="会话收件箱"></nav>
+      <div class="sidebar-bottom">
+        <button class="sidebar-link" id="connection-button"><span aria-hidden="true">⇄</span> 连接 WorkBuddy</button>
+        <button class="sidebar-link muted" id="demo-button"><span aria-hidden="true">◇</span> 用示例体验</button>
+        <div class="local-note"><i></i><span>记录保存在这台 Mac</span></div>
+      </div>
+    </aside>
+    <main class="workspace">
+      <header class="topbar"><div><span class="eyebrow">WORK INBOX</span><h1 id="page-title">留住消息里的下一步</h1></div><span id="transport-badge" class="pill neutral">微信尚未接入</span></header>
+      <div id="banner" class="banner" role="alert" hidden></div>
+      <section id="welcome" class="welcome">
+        <div class="welcome-art" aria-hidden="true"><div class="paper paper-back"></div><div class="paper"><span class="paper-label">今天的工作</span><i></i><i></i><div class="paper-check">✓ <span></span></div><div class="paper-check">✓ <span></span></div></div><div class="art-badge">⇄</div></div>
+        <span class="eyebrow">从一段聊天开始</span>
+        <h2>聊天继续，事情别漏。</h2>
+        <p>把需要跟进的微信记录放进来，让 WorkBuddy<br>帮你理清待办、整理上下文，再准备回复。</p>
+        <div class="welcome-actions"><button class="button primary" id="welcome-import">导入第一段聊天</button><button class="button secondary" id="welcome-demo">看看示例</button></div>
+        <div class="welcome-steps"><span><b>1</b> 保留原文</span><span><b>2</b> 整理工作</span><span><b>3</b> 确认回复</span></div>
+      </section>
+      <section id="conversation-view" class="conversation-view" hidden>
+        <div class="conversation-header"><div><div class="conversation-heading"><h2 id="conversation-title"></h2><span id="source-badge" class="pill"></span></div><p id="conversation-meta" class="muted"></p></div><button class="button secondary small" id="copy-context">复制给 WorkBuddy</button></div>
+        <div class="selection-bar"><label><input type="checkbox" id="select-all" checked> 选择上下文</label><span id="selection-count" class="muted"></span></div>
+        <div class="messages" id="messages" aria-label="聊天原文"></div>
+        <footer class="conversation-footer"><span>原文可追溯，整理有依据。</span><button class="text-button" id="refresh-button">刷新</button></footer>
+      </section>
+    </main>
+    <aside class="work-panel">
+      <div class="panel-heading"><h2>工作台</h2><span class="pill local">本地</span></div>
+      <div class="tabs" role="tablist" aria-label="工作台"><button id="tab-notes" data-tab="notes" class="active" role="tab" aria-selected="true">整理</button><button id="tab-drafts" data-tab="drafts" role="tab" aria-selected="false">回复草稿</button><button id="tab-connect" data-tab="connect" role="tab" aria-selected="false">连接</button></div>
+      <section id="panel-notes" class="panel-body" role="tabpanel">
+        <div id="notes-empty" class="panel-empty"><div class="empty-symbol">☰</div><h3>给聊天留一份工作便笺</h3><p>选中左侧会话后，摘要、待办和引用会放在这里。</p></div>
+        <div id="notes-editor" hidden>
+          <div class="assistant-card"><span class="small-label">交给 WORKBUDDY</span><h3>整理这段聊天</h3><p>复制带有原文引用的任务，粘贴到 WorkBuddy。连接 MCP 后，结果可直接回到这里。</p><button class="button secondary wide" id="notes-workbuddy">复制整理任务 <span aria-hidden="true">↗</span></button></div>
+          <div class="field-heading"><label for="summary">摘要</label><span id="analysis-source" class="subtle-label">可手动编辑</span></div>
+          <textarea id="summary" rows="5" placeholder="当前进展、关键结论、还需要确认的事…"></textarea>
+          <div id="analysis-citations" class="citations"></div>
+          <div class="field-heading"><label>待办事项</label><span id="todo-count" class="muted">0 项</span></div>
+          <div id="todos" class="todos"></div>
+          <form id="todo-form" class="inline-form"><input id="todo-input" maxlength="500" placeholder="加一件需要跟进的事" aria-label="新待办"><button class="icon-button" aria-label="添加待办">＋</button></form>
+          <div class="button-row"><button class="button primary" id="save-notes">保存便笺</button><button class="text-button" id="extract-notes" title="从原文摘录，不调用模型">快速摘录原文</button></div>
+          <p id="notes-hint" class="footnote">每次保存保留引用。快速摘录仅复制原文，不是 AI 分析。</p>
+        </div>
+      </section>
+      <section id="panel-drafts" class="panel-body" role="tabpanel" hidden>
+        <div class="panel-intro"><h3>先准备，再确认。</h3><p>草稿和待发送是两个步骤。没有发送回执，就不会显示“已发送”。</p></div>
+        <label class="field-heading" for="draft-text">新回复草稿</label>
+        <textarea id="draft-text" rows="6" placeholder="写下准备回复的内容，或让 WorkBuddy 帮你拟稿…"></textarea>
+        <div class="button-row"><button class="button primary" id="save-draft">保存草稿</button><button class="text-button" id="draft-workbuddy">复制拟稿任务</button></div>
+        <div class="field-heading draft-list-heading"><label>回复记录</label><span id="draft-count" class="muted">0 条</span></div>
+        <div id="drafts" class="drafts"></div>
+      </section>
+      <section id="panel-connect" class="panel-body" role="tabpanel" hidden>
+        <div class="connection-graphic" aria-hidden="true"><span class="brand-mark">桥</span><i>⇄</i><span class="workbuddy-mark">W</span></div>
+        <h3>让 WorkBuddy 接住工作</h3><p class="panel-description">通过本地 MCP 连接，WorkBuddy 可以读取你导入的原文、保存摘要和待办、准备回复草稿。</p>
+        <div class="connection-step"><b>1</b><div><strong>复制连接配置</strong><p>配置指向这台 Mac 上的工作桥。</p></div></div>
+        <pre id="mcp-config" class="config-preview">正在读取配置…</pre><button class="button primary wide" id="copy-mcp">复制 MCP 配置</button>
+        <div class="connection-step"><b>2</b><div><strong>在 WorkBuddy 中添加 MCP</strong><p>将配置加入 MCP 服务设置，启用后开启一个任务。</p></div></div>
+        <div class="connection-step"><b>3</b><div><strong>从一个具体任务开始</strong><p>选一个会话，点击“复制给 WorkBuddy”，让它整理并保存结果。</p></div></div>
+        <div class="divider"></div><div class="connection-status"><span>微信消息通道</span><span id="connection-transport">尚未连接</span></div><p id="transport-reason" class="footnote">现在可以手动导入聊天。接入测试 Probe 后，会在这里显示连接状态。</p>
+        <p class="footnote">“确认待发送”只更新本地状态。工作桥不会因为连接 WorkBuddy 就自动发送消息。</p>
+      </section>
+    </aside>
+  </div>
+  <dialog id="import-dialog">
+    <form id="import-form" class="import-form">
+      <div class="dialog-header"><div><span class="eyebrow">IMPORT CONVERSATION</span><h2>把一段聊天放进工作台</h2></div><button type="button" id="close-import" class="icon-button" aria-label="关闭">×</button></div>
+      <p class="dialog-description">粘贴你选择的聊天记录。导入内容会标记为“手动导入”，保留原文，供后续引用。</p>
+      <label for="import-title">会话名称</label><input id="import-title" required maxlength="100" placeholder="例如：品牌官网改版 · 王同事">
+      <label for="import-recipient">联系人标识 <span class="muted">选填，仅用于区分同名会话</span></label><input id="import-recipient" maxlength="200" placeholder="填写你确认的联系人或会话 ID">
+      <label for="import-text">聊天原文</label><textarea id="import-text" required rows="10" maxlength="100000" placeholder="王同事：新版首页今天可以给我看一下吗？&#10;我：可以，我先把结构和配色发你确认。&#10;王同事：另外请把周五的上线安排一起整理出来。"></textarea>
+      <p class="footnote">每行一条消息，可使用“姓名：内容”。未标注姓名的行会按原文保留。</p>
+      <div class="dialog-footer"><span id="import-error" class="error-text" role="alert"></span><button type="button" id="cancel-import" class="button secondary">取消</button><button id="submit-import" class="button primary">导入会话</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="/app.js"></script>
+</body>
+</html>

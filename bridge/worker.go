@@ -556,7 +556,13 @@ func HandleBuf2Resp(msgType string, data []byte) {
 
 	ret, errMsg, err := ParseSendMsgResponse(data)
 	if err != nil {
-		Info("buf2resp响应无法提取错误码，视为成功", "msg_type", msgType, "err", err)
+		Error("buf2resp响应未核验，发送结果未知", "msg_type", msgType, "err", err)
+		buf2RespChan <- &Buf2RespData{
+			MsgType: msgType,
+			Data:    data,
+			Err:     fmt.Errorf("send response unverified: %w", err),
+		}
+		return
 	}
 
 	// 判断错误码是否为0
@@ -570,7 +576,7 @@ func HandleBuf2Resp(msgType string, data []byte) {
 		return
 	}
 
-	Info("buf2resp响应成功", "msg_type", msgType)
+	Info("buf2resp BaseResponse错误码为0，未确认接收端送达", "msg_type", msgType)
 	buf2RespChan <- &Buf2RespData{
 		MsgType: msgType,
 		Data:    data,
