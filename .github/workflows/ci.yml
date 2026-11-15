@@ -34,6 +34,17 @@ jobs:
       - name: Docs links, script copy and version JSON
         run: bash scripts/check.sh --docs
 
+      - name: Probe contracts (offline, standard library only)
+        run: python3 -m unittest discover -s tools -p 'test_probe_*.py' -v
+
+      - name: No private Probe state tracked
+        run: |
+          if git ls-files | grep -E '(^|/)(\.omx|\.probe-local|probe-evidence)/' || \
+             git ls-files | grep -E '(^|/)probe-(profile|target)[^/]*\.json$' | grep -v '\.example\.json$'; then
+            echo "❌ 仓库包含 Probe 私有配置或运行证据"
+            exit 1
+          fi
+
       - name: No generated artifacts tracked
         run: |
           if git ls-files | grep -Ei '(\.(dylib|dmg|zip|sqlite|sqlite3|db|log)$|^bridge/onebot$)'; then

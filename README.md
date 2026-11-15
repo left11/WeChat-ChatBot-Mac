@@ -1,5 +1,7 @@
 # 微信 AI 聊天机器人（WeChat AI）
 
+> **本 fork 的当前工作**：适配独立测试 Probe `4.1.15.35 / 270115`。当前为静态适配与隔离校验阶段，尚未验证该版本的聊天读取或自动回复。请先看 [工程约定](docs/engineering.md) 和 [270115 适配证据](docs/probe-270115.md)。下面保留上游产品介绍，不代表此实验版本已经通过。
+
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%2026%2B-lightgrey.svg)](#简体中文)
 [![Swift](https://img.shields.io/badge/Swift-6.4-orange.svg)](app/Package.swift)

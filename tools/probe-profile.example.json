@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "target": {
+    "app_path": "/ABSOLUTE/PRIVATE/PROBE/WeChat-Main-Probe.app",
+    "executable_path": "/ABSOLUTE/PRIVATE/PROBE/WeChat-Main-Probe.app/Contents/MacOS/WeChat",
+    "module_path": "/ABSOLUTE/PRIVATE/PROBE/WeChat-Main-Probe.app/Contents/Resources/wechat.dylib",
+    "bundle_id": "local.wechat.urlprobe.client",
+    "full_version": "4.1.15.35",
+    "build": "270115",
+    "arm64_uuid": "9CEB6CCF-81A5-3B7F-8FB5-B4256FE67EEB",
+    "arm64_sha256": "6d3feb56043cb63d2ff3f77aa32115abbfe7a2f28b3ab1ab59886ee625703e4b",
+    "process": {
+      "pid": 0,
+      "uid": -1,
+      "start_seconds": 0,
+      "start_microseconds": 0,
+      "executable_path": "/ABSOLUTE/PRIVATE/PROBE/WeChat-Main-Probe.app/Contents/MacOS/WeChat"
+    }
+  },
+  "controller": {
+    "state_path": "/ABSOLUTE/PRIVATE/PROBE/resident-controller.json",
+    "trace_dir": "/ABSOLUTE/PRIVATE/TRACE",
+    "result_path": "/ABSOLUTE/PRIVATE/TRACE/debugger-result.json",
+    "max_heartbeat_age_seconds": 8,
+    "supervisor": {
+      "pid": 0,
+      "uid": -1,
+      "start_seconds": 0,
+      "start_microseconds": 0,
+      "executable_path": "/ABSOLUTE/CANONICAL/SUPERVISOR/EXECUTABLE"
+    },
+    "debugger": {
+      "pid": 0,
+      "uid": -1,
+      "start_seconds": 0,
+      "start_microseconds": 0,
+      "executable_path": "/ABSOLUTE/CANONICAL/DEBUGGER/EXECUTABLE"
+    }
+  }
+}
